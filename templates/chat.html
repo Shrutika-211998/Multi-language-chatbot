@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Chat Interface</title>
+    <link rel="stylesheet" href="static/chat-interface-css.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</head>
+<body>
+    <div class="chat-container">
+        <header class="chat-header">
+            <button class="back-button">&lt;</button>
+            <div class="user-info">
+                <div class="avatar"></div>
+                <span class="username">Dominika Faniz</span>
+            </div>
+        </header>
+        <div class="messages-container">
+            <div class="message sender">
+                <div class="message-content">Hi Jakub, How is it going? Something new?</div>
+            </div>
+            <div class="message receiver">
+                <div class="message-content">Hello</div>
+            </div>
+            <div class="message receiver">
+                <div class="message-content">Great, What about you?</div>
+            </div>
+            <div class="message sender">
+                <div class="message-content">Me too, I'm just eating my lunch.</div>
+            </div>
+        </div>
+        <div class="input-area">
+            <input type="text" placeholder="Your message" id="messageInput">
+            <button id="sendButton">Send</button>
+        </div>
+    </div>
+    <script src="static/chat-interface-js.js"></script>
+</body>
+</html>

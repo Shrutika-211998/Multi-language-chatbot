@@ -3,9 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Multi-Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <style>
+        /* Chatbot window and layout styles */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .botIcon {
+            bottom: 15px;
+            right: 15px;
+            position: fixed;
+            z-index: 9999;
+        }
+        .iconInner {
+            background-color: #4CAF50;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+        }
+        .chatWindow {
+            display: none;
+            width: 300px;
+            height: 400px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            position: fixed;
+            bottom: 80px;
+            right: 15px;
+            z-index: 99999;
+        }
+        .chatHeader {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .chatMessages {
+            padding: 10px;
+            height: 250px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ccc;
+        }
+        .chatInput {
+            display: flex;
+            padding: 10px;
+        }
+        .chatInput input {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .chatInput button {
+            width: 20%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .message.user {
+            color: blue;
+        }
+        .message.bot {
+            color: green;
+        }
+    </style>
 </head>
 <body>
-    <p> hi today's sesssion is started</p>
+
+    <!-- Chat Icon -->
+    <div class="botIcon" id="chatIcon">
+        <div class="iconInner">
+            <i class="fa fa-comment"></i>
+        </div>
+    </div>
+
+    <!-- Chat Window -->
+    <div class="chatWindow" id="chatWindow">
+        <div class="chatHeader">
+            Chatbot
+        </div>
+        <div class="chatMessages" id="chatMessages">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="chatInput">
+            <input type="text" id="userMessage" placeholder="Type a message...">
+            <button id="sendMessage">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Handle chat window opening and closing
+        document.getElementById('chatIcon').addEventListener('click', function() {
+            document.getElementById('chatWindow').style.display = 'block';
+        });
+
+        // Send message to chatbot and receive response
+        document.getElementById('sendMessage').addEventListener('click', function() {
+            const userMessage = document.getElementById('userMessage').value;
+
+            if (userMessage.trim() !== "") {
+                displayMessage('user', userMessage);
+
+                fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: userMessage })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    displayMessage('bot', data.response);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+                document.getElementById('userMessage').value = '';
+            }
+        });
+
+        // Display messages in the chat window
+        function displayMessage(sender, message) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', sender);
+            messageElement.textContent = message;
+            document.getElementById('chatMessages').appendChild(messageElement);
+
+            // Scroll to the bottom of the chat
+            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+        }
+    </script>
+
 </body>
 </html>
