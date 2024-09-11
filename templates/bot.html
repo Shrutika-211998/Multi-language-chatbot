@@ -3,264 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animated Chat Interface with Chatbot</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>AWS-Themed Chatbot Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amazon+Ember:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        :root {
+            --aws-dark: #232f3e;
+            --aws-orange: #ff9900;
+            --aws-light: #ffffff;
+            --aws-gray: #d5dbdb;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--aws-dark);
+            color: var(--aws-light);
+        }
+
+        .chatbot-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: var(--aws-orange);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .chatbot-button:hover {
+            transform: scale(1.1);
+        }
+
+        .chatbot-icon {
+            font-size: 30px;
+        }
+
+        .chatbot-interface {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background-color: var(--aws-dark);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: scale(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease;
+        }
+
+        .chatbot-interface.open {
+            transform: scale(1);
+        }
+
+        .chatbot-header {
+            background-color: var(--aws-orange);
+            color: var(--aws-dark);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: var(--aws-dark);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .chatbot-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chatbot-input {
+            display: flex;
+            padding: 15px;
+            background-color: var(--aws-dark);
+            border-top: 1px solid var(--aws-gray);
+        }
+
+        .chatbot-input input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid var(--aws-gray);
+            border-radius: 5px;
+            background-color: var(--aws-light);
+            color: var(--aws-dark);
+        }
+
+        .chatbot-input button {
+            background-color: var(--aws-orange);
+            color: var(--aws-dark);
+            border: none;
+            padding: 10px 15px;
+            margin-left: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .chatbot-message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .chatbot-message.user {
+            background-color: var(--aws-orange);
+            color: var(--aws-dark);
+            align-self: flex-end;
+        }
+
+        .chatbot-message.bot {
+            background-color: var(--aws-gray);
+            color: var(--aws-dark);
+            align-self: flex-start;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-<style>
-    body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
-}
-
-.chat-container {
-    max-width: 400px;
-    margin: 0 auto;
-    background-color: #fff;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-/* ... (previous styles remain the same) ... */
-
-/* Chatbot Button Styles */
-.chatbot-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 60px;
-    height: 60px;
-    background-color: #20c997;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
-}
-
-.chatbot-button:hover {
-    transform: scale(1.1);
-}
-
-.chatbot-icon {
-    font-size: 30px;
-}
-
-/* Chatbot Interface Styles */
-.chatbot-interface {
-    position: fixed;
-    bottom: 90px;
-    right: 20px;
-    width: 300px;
-    height: 400px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transform: scale(0);
-    transform-origin: bottom right;
-    transition: transform 0.3s ease;
-}
-
-.chatbot-interface.open {
-    transform: scale(1);
-}
-
-.chatbot-header {
-    background-color: #20c997;
-    color: white;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.close-button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.chatbot-messages {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 10px;
-}
-
-.chatbot-input {
-    display: flex;
-    padding: 10px;
-    border-top: 1px solid #e0e0e0;
-}
-
-.chatbot-input input {
-    flex-grow: 1;
-    padding: 5px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-}
-
-.chatbot-input button {
-    background-color: #20c997;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    margin-left: 5px;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-.chatbot-message {
-    margin-bottom: 10px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    max-width: 80%;
-}
-
-.chatbot-message.user {
-    background-color: #e0e0e0;
-    align-self: flex-end;
-    margin-left: auto;
-}
-
-.chatbot-message.bot {
-    background-color: #dcf8c6;
-    align-self: flex-start;
-}
-</style>
 <body>
-    <!-- <div class="">
-        <header class="chat-header">
-            <button class="back-button">&lt;</button>
-            <div class="user-info">
-                <div class="avatar"></div>
-                <span class="username">Dominika Faniz</span>
-            </div>
-        </header>
-        <div class="messages-container">
-            <div class="message sender">
-                <div class="message-content">Hi Jakub, How is it going? Something new?</div>
-            </div>
-            <div class="message receiver">
-                <div class="message-content">Hello</div>
-            </div>
-            <div class="message receiver">
-                <div class="message-content">Great, What about you?</div>
-            </div>
-            <div class="message sender">
-                <div class="message-content">Me too, I'm just eating my lunch.</div>
-            </div>
-        </div>
-        <div class="input-area">
-            <input type="text" placeholder="Your message" id="messageInput">
-            <button id="sendButton">Send</button>
-        </div>
-    </div> -->
-
-    <!-- Chatbot Button -->
     <div class="chatbot-button" id="chatbotButton">
         <div class="chatbot-icon">🤖</div>
     </div>
 
-    <!-- Chatbot Interface -->
     <div class="chatbot-interface" id="chatbotInterface">
         <div class="chatbot-header">
-            <span>Chatbot</span>
+            <span>AWS Chatbot</span>
             <button class="close-button" id="closeChatbot">×</button>
         </div>
         <div class="chatbot-messages" id="chatbotMessages"></div>
         <div class="chatbot-input">
-            <input type="text" placeholder="Ask me anything..." id="chatbotInput">
+            <input type="text" placeholder="Ask about AWS services..." id="chatbotInput">
             <button id="chatbotSendButton">Send</button>
         </div>
     </div>
 
-    <script src="script.js"></script>
-</body>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-    const messagesContainer = document.querySelector('.messages-container');
-    const messageInput = document.getElementById('messageInput');
-    const sendButton = document.getElementById('sendButton');
-    const chatbotButton = document.getElementById('chatbotButton');
-    const chatbotInterface = document.getElementById('chatbotInterface');
-    const closeChatbotButton = document.getElementById('closeChatbot');
-    const chatbotMessages = document.getElementById('chatbotMessages');
-    const chatbotInput = document.getElementById('chatbotInput');
-    const chatbotSendButton = document.getElementById('chatbotSendButton');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatbotButton = document.getElementById('chatbotButton');
+            const chatbotInterface = document.getElementById('chatbotInterface');
+            const closeChatbotButton = document.getElementById('closeChatbot');
+            const chatbotMessages = document.getElementById('chatbotMessages');
+            const chatbotInput = document.getElementById('chatbotInput');
+            const chatbotSendButton = document.getElementById('chatbotSendButton');
 
-    // ... (previous animations and functions remain the same) ...
+            function toggleChatbot() {
+                chatbotInterface.classList.toggle('open');
+                if (chatbotInterface.classList.contains('open')) {
+                    anime({
+                        targets: chatbotInterface,
+                        scale: [0, 1],
+                        duration: 300,
+                        easing: 'easeOutQuad'
+                    });
+                } else {
+                    anime({
+                        targets: chatbotInterface,
+                        scale: 0,
+                        duration: 300,
+                        easing: 'easeInQuad'
+                    });
+                }
+            }
 
-    // Chatbot functions
-    function toggleChatbot() {
-        chatbotInterface.classList.toggle('open');
-        if (chatbotInterface.classList.contains('open')) {
-            anime({
-                targets: chatbotInterface,
-                scale: [0, 1],
-                duration: 300,
-                easing: 'easeOutQuad'
+            function addChatbotMessage(message, sender) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('chatbot-message', sender);
+                messageElement.textContent = message;
+                chatbotMessages.appendChild(messageElement);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+
+                anime({
+                    targets: messageElement,
+                    translateY: [20, 0],
+                    opacity: [0, 1],
+                    duration: 300,
+                    easing: 'easeOutQuad'
+                });
+            }
+
+            function handleChatbotMessage() {
+                const message = chatbotInput.value.trim();
+                if (message) {
+                    addChatbotMessage(message, 'user');
+                    chatbotInput.value = '';
+
+                    // Simulate chatbot response (replace with actual AWS chatbot logic)
+                    setTimeout(() => {
+                        const botResponse = "I'm an AWS-themed chatbot. How can I help you with AWS services today?";
+                        addChatbotMessage(botResponse, 'bot');
+                    }, 1000);
+                }
+            }
+
+            chatbotButton.addEventListener('click', toggleChatbot);
+            closeChatbotButton.addEventListener('click', toggleChatbot);
+            chatbotSendButton.addEventListener('click', handleChatbotMessage);
+            chatbotInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleChatbotMessage();
+                }
             });
-        } else {
-            anime({
-                targets: chatbotInterface,
-                scale: 0,
-                duration: 300,
-                easing: 'easeInQuad'
-            });
-        }
-    }
-
-    function addChatbotMessage(message, sender) {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('chatbot-message', sender);
-        messageElement.textContent = message;
-        chatbotMessages.appendChild(messageElement);
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-
-        anime({
-            targets: messageElement,
-            translateY: [20, 0],
-            opacity: [0, 1],
-            duration: 300,
-            easing: 'easeOutQuad'
         });
-    }
-
-    function handleChatbotMessage() {
-        const message = chatbotInput.value.trim();
-        if (message) {
-            addChatbotMessage(message, 'user');
-            chatbotInput.value = '';
-
-            // Simulate chatbot response (replace with actual chatbot logic)
-            setTimeout(() => {
-                const botResponse = "I'm a simple chatbot. How can I assist you today?";
-                addChatbotMessage(botResponse, 'bot');
-            }, 1000);
-        }
-    }
-
-    // Event listeners
-    chatbotButton.addEventListener('click', toggleChatbot);
-    closeChatbotButton.addEventListener('click', toggleChatbot);
-    chatbotSendButton.addEventListener('click', handleChatbotMessage);
-    chatbotInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            handleChatbotMessage();
-        }
-    });
-
-    // ... (previous event listeners remain the same) ...
-});
-</script>
+    </script>
+</body>
 </html>
