@@ -3,145 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HDFC-Inspired Chatbot</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Multi-Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
     <style>
-        :root {
-            --primary-color: #004C8F;
-            --secondary-color: #ED232A;
-            --background-color: #F0F0F0;
-            --text-color: #333333;
-            --chat-bg: #FFFFFF;
-        }
-
+        /* Chatbot window and layout styles */
         body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
+            font-family: Arial, sans-serif;
         }
-
         .botIcon {
-            bottom: 30px;
-            right: 30px;
+            bottom: 15px;
+            right: 15px;
             position: fixed;
             z-index: 9999;
         }
-
         .iconInner {
-            background-color: var(--primary-color);
+            background-color: #4CAF50;
             border-radius: 50%;
             color: white;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             font-size: 24px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
         }
-
-        .iconInner:hover {
-            background-color: #003D73;
-        }
-
         .chatWindow {
             display: none;
-            width: 350px;
-            height: 500px;
-            background-color: var(--chat-bg);
+            width: 300px;
+            height: 400px;
+            background-color: white;
+            border: 1px solid #ccc;
             border-radius: 10px;
             position: fixed;
-            bottom: 100px;
-            right: 30px;
+            bottom: 80px;
+            right: 15px;
             z-index: 99999;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
         }
-
         .chatHeader {
-            background-color: var(--primary-color);
+            background-color: #4CAF50;
             color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
+            padding: 10px;
+            text-align: center;
         }
-
-        .chatHeader img {
-            width: 30px;
-            height: 30px;
-            margin-right: 10px;
-        }
-
         .chatMessages {
-            padding: 20px;
-            height: 350px;
+            padding: 10px;
+            height: 250px;
             overflow-y: auto;
-            background-color: #F9F9F9;
+            border-bottom: 1px solid #ccc;
         }
-
         .chatInput {
             display: flex;
-            padding: 15px;
-            background-color: white;
-            border-top: 1px solid #E0E0E0;
+            padding: 10px;
         }
-
         .chatInput input {
             width: 80%;
-            padding: 12px;
-            border: 1px solid #D0D0D0;
-            border-radius: 4px;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.3s ease;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
-
-        .chatInput input:focus {
-            border-color: var(--primary-color);
-        }
-
         .chatInput button {
             width: 20%;
-            background-color: var(--primary-color);
+            background-color: #4CAF50;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
-            margin-left: 10px;
-            transition: background-color 0.3s ease;
         }
-
-        .chatInput button:hover {
-            background-color: #003D73;
-        }
-
         .message {
-            margin-bottom: 15px;
-            padding: 10px 15px;
-            border-radius: 4px;
-            max-width: 80%;
-            line-height: 1.4;
+            margin-bottom: 10px;
         }
-
         .message.user {
-            background-color: #E8F0FE;
-            color: var(--text-color);
-            align-self: flex-end;
-            margin-left: auto;
+            color: blue;
         }
-
         .message.bot {
-            background-color: #FFF;
-            color: var(--text-color);
-            border: 1px solid #E0E0E0;
+            color: green;
         }
     </style>
 </head>
@@ -150,41 +86,32 @@
     <!-- Chat Icon -->
     <div class="botIcon" id="chatIcon">
         <div class="iconInner">
-            <i class="fas fa-comments"></i>
+            <i class="fa fa-comment"></i>
         </div>
     </div>
 
     <!-- Chat Window -->
     <div class="chatWindow" id="chatWindow">
         <div class="chatHeader">
-            <img src="/api/placeholder/30/30" alt="HDFC Logo" />
-            HDFC Bank Assistant
+            Chatbot
         </div>
         <div class="chatMessages" id="chatMessages">
             <!-- Chat messages will appear here -->
         </div>
         <div class="chatInput">
-            <input type="text" id="userMessage" placeholder="Type your message...">
-            <button id="sendMessage"><i class="fas fa-paper-plane"></i></button>
+            <input type="text" id="userMessage" placeholder="Type a message...">
+            <button id="sendMessage">Send</button>
         </div>
     </div>
 
     <script>
         // Handle chat window opening and closing
         document.getElementById('chatIcon').addEventListener('click', function() {
-            const chatWindow = document.getElementById('chatWindow');
-            chatWindow.style.display = chatWindow.style.display === 'none' ? 'block' : 'none';
+            document.getElementById('chatWindow').style.display = 'block';
         });
 
         // Send message to chatbot and receive response
-        document.getElementById('sendMessage').addEventListener('click', sendMessage);
-        document.getElementById('userMessage').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-
-        function sendMessage() {
+        document.getElementById('sendMessage').addEventListener('click', function() {
             const userMessage = document.getElementById('userMessage').value;
 
             if (userMessage.trim() !== "") {
@@ -207,7 +134,7 @@
 
                 document.getElementById('userMessage').value = '';
             }
-        }
+        });
 
         // Display messages in the chat window
         function displayMessage(sender, message) {
