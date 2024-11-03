@@ -3,13 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Chatbot</title>
+    <title>Chatbot Development Agency</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
     <style>
-        /* Chatbot window and layout styles */
+        /* Global styles */
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
         }
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        /* Hero section */
+        .hero {
+            background: url('https://via.placeholder.com/1200x500') no-repeat center center;
+            background-size: cover;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+        .hero h2 {
+            font-size: 3em;
+            margin: 0;
+            font-weight: bold;
+        }
+        .hero p {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        .hero button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Features section */
+        .features {
+            display: flex;
+            justify-content: space-around;
+            padding: 50px 0;
+        }
+        .feature-card {
+            background-color: white;
+            width: 30%;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .feature-card i {
+            font-size: 3em;
+            color: #4CAF50;
+        }
+        .feature-card h3 {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+        .feature-card p {
+            font-size: 1em;
+            color: #666;
+        }
+
+        /* Chatbot UI */
         .botIcon {
             bottom: 15px;
             right: 15px;
@@ -24,31 +108,34 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             font-size: 24px;
         }
         .chatWindow {
             display: none;
-            width: 300px;
-            height: 400px;
+            width: 350px;
+            height: 500px;
             background-color: white;
-            border: 1px solid #ccc;
             border-radius: 10px;
             position: fixed;
             bottom: 80px;
             right: 15px;
             z-index: 99999;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         .chatHeader {
             background-color: #4CAF50;
             color: white;
-            padding: 10px;
+            padding: 15px;
             text-align: center;
+            font-size: 1.2em;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
         }
         .chatMessages {
             padding: 10px;
-            height: 250px;
+            height: 350px;
             overflow-y: auto;
             border-bottom: 1px solid #ccc;
         }
@@ -72,16 +159,52 @@
         }
         .message {
             margin-bottom: 10px;
+            border-radius: 5px;
+            padding: 8px 10px;
         }
         .message.user {
-            color: blue;
+            background-color: #e0f7fa;
+            color: #00796b;
+            text-align: right;
         }
         .message.bot {
-            color: green;
+            background-color: #c8e6c9;
+            color: #388e3c;
+            text-align: left;
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
+    <header>
+        <h1>Premium Chatbot Development Agency</h1>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h2>Build Intelligent Conversational Experiences</h2>
+        <p>Enhance your business with custom chatbots that engage, inform, and support your customers.</p>
+        <button>Get Started</button>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features container">
+        <div class="feature-card">
+            <i class="fa fa-comments"></i>
+            <h3>Advanced AI Chatbots</h3>
+            <p>Create chatbots that understand your customers and respond with accuracy and empathy.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fa fa-cogs"></i>
+            <h3>Customized Integrations</h3>
+            <p>Seamlessly integrate chatbots with your CRM, helpdesk, and other business tools.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fa fa-line-chart"></i>
+            <h3>Real-time Analytics</h3>
+            <p>Monitor chatbot interactions and gain insights to optimize customer engagement.</p>
+        </div>
+    </section>
 
     <!-- Chat Icon -->
     <div class="botIcon" id="chatIcon">
@@ -92,12 +215,8 @@
 
     <!-- Chat Window -->
     <div class="chatWindow" id="chatWindow">
-        <div class="chatHeader">
-            Chatbot
-        </div>
-        <div class="chatMessages" id="chatMessages">
-            <!-- Chat messages will appear here -->
-        </div>
+        <div class="chatHeader">Chatbot Assistant</div>
+        <div class="chatMessages" id="chatMessages"></div>
         <div class="chatInput">
             <input type="text" id="userMessage" placeholder="Type a message...">
             <button id="sendMessage">Send</button>
@@ -105,48 +224,28 @@
     </div>
 
     <script>
-        // Handle chat window opening and closing
         document.getElementById('chatIcon').addEventListener('click', function() {
             document.getElementById('chatWindow').style.display = 'block';
         });
 
-        // Send message to chatbot and receive response
         document.getElementById('sendMessage').addEventListener('click', function() {
             const userMessage = document.getElementById('userMessage').value;
-
             if (userMessage.trim() !== "") {
                 displayMessage('user', userMessage);
-
-                fetch('/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ message: userMessage })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    displayMessage('bot', data.response);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-
                 document.getElementById('userMessage').value = '';
+                setTimeout(() => {
+                    displayMessage('bot', 'Thank you for your message! Our chatbot will assist you shortly.');
+                }, 1000);
             }
         });
 
-        // Display messages in the chat window
         function displayMessage(sender, message) {
             const messageElement = document.createElement('div');
             messageElement.classList.add('message', sender);
             messageElement.textContent = message;
             document.getElementById('chatMessages').appendChild(messageElement);
-
-            // Scroll to the bottom of the chat
             document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
         }
     </script>
-
 </body>
 </html>
