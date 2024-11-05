@@ -3,3 +3,5 @@ gunicorn==22.0.0
 Werkzeug==3.0.3
 python-dotenv
 google-cloud-dialogflow-cx
+langdetect
+deep_translator
