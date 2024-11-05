@@ -3,38 +3,505 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animated Chat Interface</title>
-    <link rel="stylesheet" href="static/chat-interface-css.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <title>BotCraft Agency - AI-Powered Chatbot Solutions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Utility Classes */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-outline {
+            border: 2px solid #2563eb;
+            color: #2563eb;
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* Header Styles */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #1e293b;
+        }
+
+        .logo i {
+            color: #2563eb;
+            margin-right: 10px;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #1e293b;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 140px 0 80px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            color: #1e293b;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            color: #2563eb;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: #64748b;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            color: #1e293b;
+            margin-bottom: 50px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card i {
+            font-size: 30px;
+            color: #2563eb;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* Chatbot Styles */
+        .chatbot-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .chat-icon {
+            width: 60px;
+            height: 60px;
+            background: #2563eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .chat-icon:hover {
+            transform: rotate(20deg) scale(1.1);
+        }
+
+        .chat-icon i {
+            color: white;
+            font-size: 24px;
+        }
+
+        .chat-window {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            transform: scale(0.8);
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.5s ease;
+        }
+
+        .chat-window.open {
+            display: block;
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .chat-header {
+            background: #2563eb;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+        .chat-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+        }
+
+        .close-chat {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .close-chat:hover {
+            transform: rotate(90deg);
+        }
+
+        .chat-messages {
+            height: 300px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message.bot {
+            align-items: flex-start;
+        }
+
+        .message.user {
+            align-items: flex-end;
+        }
+
+        .message-content {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .bot .message-content {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .user .message-content {
+            background: #2563eb;
+            color: white;
+        }
+
+        .chat-input {
+            padding: 15px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+        }
+
+        .chat-input button {
+            padding: 10px 15px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .chat-input button:hover {
+            background: #1d4ed8;
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .chat-window {
+                width: calc(100% - 40px);
+                bottom: 80px;
+                right: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="chat-container">
-        <header class="chat-header">
-            <button class="back-button">&lt;</button>
-            <div class="user-info">
-                <div class="avatar"></div>
-                <span class="username">Dominika Faniz</span>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                BotCraft
             </div>
-        </header>
-        <div class="messages-container">
-            <div class="message sender">
-                <div class="message-content">Hi Jakub, How is it going? Something new?</div>
-            </div>
-            <div class="message receiver">
-                <div class="message-content">Hello</div>
-            </div>
-            <div class="message receiver">
-                <div class="message-content">Great, What about you?</div>
-            </div>
-            <div class="message sender">
-                <div class="message-content">Me too, I'm just eating my lunch.</div>
+            <nav>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#demo">Demo</a></li>
+                    <li><button class="btn btn-primary">Contact Us</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Transform Your Business with<br><span>AI-Powered Chatbots</span></h1>
+            <p>We create intelligent chatbot solutions that enhance customer experience and streamline operations</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary">Get Started</button>
+                <button class="btn btn-outline">Watch Demo</button>
             </div>
         </div>
-        <div class="input-area">
-            <input type="text" placeholder="Your message" id="messageInput">
-            <button id="sendButton">Send</button>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose BotCraft?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-robot"></i>
+                    <h3>AI-Powered Chatbots</h3>
+                    <p>Custom-built chatbots using cutting-edge artificial intelligence</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-code"></i>
+                    <h3>Seamless Integration</h3>
+                    <p>Easy integration with your existing platforms and workflows</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Enterprise Security</h3>
+                    <p>Bank-grade security and data protection protocols</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-users"></i>
+                    <h3>24/7 Support</h3>
+                    <p>Round-the-clock customer support and maintenance</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chatbot Widget -->
+    <div class="chatbot-widget">
+        <div class="chat-icon" id="chatIcon">
+            <i class="fas fa-comment"></i>
+        </div>
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <h3><i class="fas fa-robot"></i> BotCraft Assistant</h3>
+                <button class="close-chat" id="closeChat">&times;</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="message-content">
+                        Hello! 👋 How can I help you today?
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" placeholder="Type your message..." id="userMessage">
+                <button id="sendMessage">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
         </div>
     </div>
-    <script src="static/chat-interface-js.js"></script>
+
+    <script>
+        // Handle chat window opening and closing
+        document.getElementById('chatIcon').addEventListener('click', function() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.style.display = 'block';
+            setTimeout(() => {
+                chatWindow.classList.add('open');
+            }, 10);
+        });
+
+        document.getElementById('closeChat').addEventListener('click', function() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.classList.remove('open');
+            setTimeout(() => {
+                chatWindow.style.display = 'none';
+            }, 500);
+        });
+
+        // Send message to chatbot and receive response
+        document.getElementById('sendMessage').addEventListener('click', function() {
+            const userMessage = document.getElementById('userMessage').value;
+
+            if (userMessage.trim() !== "") {
+                displayMessage('user', userMessage);
+
+                fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: userMessage })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    displayMessage('bot', data.response);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+                document.getElementById('userMessage').value = '';
+            }
+        });
+
+        // Display messages in the chat window
+        function displayMessage(sender, message) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', sender);
+            messageElement.innerHTML = `
+                <div class="message-content">
+                    ${message}
+                </div>
+            `;
+            document.getElementById('chatMessages').appendChild(messageElement);
+
+            // Scroll to the bottom of the chat
+            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+        }
+    </script>
 </body>
 </html>
