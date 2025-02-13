@@ -5,3 +5,9 @@ python-dotenv
 google-cloud-dialogflow-cx
 langdetect
 deep_translator
+# Production dependencies
+Flask-Limiter==3.5.0  # For rate limiting
+Flask-Talisman==1.1.0  # For security headers
+prometheus-flask-exporter==0.22.4  # For monitoring
+sentry-sdk[flask]==1.40.4  # For error tracking
+uwsgi==2.0.24  # Production WSGI server
